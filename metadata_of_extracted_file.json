@@ -1,0 +1,108 @@
+{
+    "file_write.json": {
+        "file_size": 46625,
+        "ip_port_details": [
+            {
+                "source_ip_address": "192.168.1.78",
+                "source_port_number": 55770,
+                "destination_ip_address": "192.168.1.53",
+                "destination_port_number": 445
+            },
+            {
+                "source_ip_address": "192.168.1.53",
+                "source_port_number": 445,
+                "destination_ip_address": "192.168.1.78",
+                "destination_port_number": 55770
+            },
+            {
+                "source_ip_address": "192.168.1.78",
+                "source_port_number": 55770,
+                "destination_ip_address": "192.168.1.53",
+                "destination_port_number": 445
+            },
+            {
+                "source_ip_address": "192.168.1.53",
+                "source_port_number": 445,
+                "destination_ip_address": "192.168.1.78",
+                "destination_port_number": 55770
+            },
+            {
+                "source_ip_address": "192.168.1.78",
+                "source_port_number": 55770,
+                "destination_ip_address": "192.168.1.53",
+                "destination_port_number": 445
+            },
+            {
+                "source_ip_address": "192.168.1.53",
+                "source_port_number": 445,
+                "destination_ip_address": "192.168.1.78",
+                "destination_port_number": 55770
+            },
+            {
+                "source_ip_address": "192.168.1.78",
+                "source_port_number": 55770,
+                "destination_ip_address": "192.168.1.53",
+                "destination_port_number": 445
+            },
+            {
+                "source_ip_address": "192.168.1.53",
+                "source_port_number": 445,
+                "destination_ip_address": "192.168.1.78",
+                "destination_port_number": 55770
+            },
+            {
+                "source_ip_address": "192.168.1.78",
+                "source_port_number": 55770,
+                "destination_ip_address": "192.168.1.53",
+                "destination_port_number": 445
+            },
+            {
+                "source_ip_address": "192.168.1.53",
+                "source_port_number": 445,
+                "destination_ip_address": "192.168.1.78",
+                "destination_port_number": 55770
+            },
+            {
+                "source_ip_address": "192.168.1.78",
+                "source_port_number": 55770,
+                "destination_ip_address": "192.168.1.53",
+                "destination_port_number": 445
+            },
+            {
+                "source_ip_address": "192.168.1.53",
+                "source_port_number": 445,
+                "destination_ip_address": "192.168.1.78",
+                "destination_port_number": 55770
+            },
+            {
+                "source_ip_address": "192.168.1.78",
+                "source_port_number": 55770,
+                "destination_ip_address": "192.168.1.53",
+                "destination_port_number": 445
+            },
+            {
+                "source_ip_address": "192.168.1.53",
+                "source_port_number": 445,
+                "destination_ip_address": "192.168.1.78",
+                "destination_port_number": 55770
+            }
+        ]
+    },
+    "file_read.json": {
+        "file_size": 97719,
+        "ip_port_details": [
+            {
+                "source_ip_address": "192.168.1.78",
+                "source_port_number": 55770,
+                "destination_ip_address": "192.168.1.53",
+                "destination_port_number": 445
+            },
+            {
+                "source_ip_address": "192.168.1.53",
+                "source_port_number": 445,
+                "destination_ip_address": "192.168.1.78",
+                "destination_port_number": 55770
+            }
+        ]
+    }
+}
