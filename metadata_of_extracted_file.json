@@ -1,4 +1,12 @@
 {
     "FileName": "Test\\2009-12 Payroll.xlsx",
-    "FileSize": "25.33 KB"
+    "FileSize": "25.33 KB",
+    "src": "192.168.1.78",
+    "dst": "192.168.1.53",
+    "sport": 55770,
+    "dport": 445,
+    "timestamp": [
+        1003549546,
+        8116880
+    ]
 }

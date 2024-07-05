@@ -28,6 +28,11 @@
 2. A JSON file containing Metadata of extracted file as a JSON file including:
     - File name
     - File size
+    - Source IP address
+    - Source Port number
+    - Destination IP address
+    - Destination Port number
+    - timestamp
 3. A JSON file containing logs of all packet layer details.
 
 

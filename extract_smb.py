@@ -165,7 +165,23 @@ def extract_file_data_and_name(logs):
                             name = re.sub(r"^b'|'$", '', name)
                             name = name.encode('latin1').decode('unicode_escape')
                         file_name = name
-    return file_data, file_name
+
+        # Extracting src, dst, sport, dport, and timestamp values
+        for item in entry:
+            if isinstance(item, list) and item[0] == "IP":
+                ip_header = item[1]
+                src = ip_header.get("src", "")
+                dst = ip_header.get("dst", "")
+            if isinstance(item, list) and item[0] == "TCP":
+                tcp_header = item[1]
+                sport = tcp_header.get("sport", 0)
+                dport = tcp_header.get("dport", 0)
+                for option in tcp_header.get("options", []):
+                    if isinstance(option, list) and option[0] == "Timestamp":
+                        timestamp = option[1]
+
+
+    return file_data, file_name, src, dst, sport, dport, timestamp
 
 # Function to recursively extract packet layer details
 def extract_packet_details(packet):
@@ -193,7 +209,7 @@ with open('logs.json', 'r') as file:
     logs = json.load(file)
 
 # Extract the file data and name
-file_data, file_name = extract_file_data_and_name(logs)
+file_data, file_name, src, dst, sport, dport, timestamp = extract_file_data_and_name(logs)
 
 # Cleaning the file name
 clean_file_name = re.sub(r'\x00', '', file_name)  # remove null bytes
@@ -211,7 +227,12 @@ file_size = os.path.getsize(clean_file_name)
 # Prepare metadata
 metadata = {
     "FileName": clean_file_name,
-    "FileSize": convert_size(file_size)
+    "FileSize": convert_size(file_size),
+    "src": src,
+    "dst": dst,
+    "sport": sport,
+    "dport": dport,
+    "timestamp": timestamp
 }
 
 # Save metadata to JSON file
