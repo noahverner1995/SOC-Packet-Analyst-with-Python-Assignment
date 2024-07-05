@@ -1,7 +1,7 @@
-# SOC/Packet Analyst with C/Python Assignment
+# SOC/Packet Analyst with Python Assignment
 
 ## 1. Target File
-**smb.pcap**
+**[smb.pcap](https://github.com/noahverner1995/SOC-Packet-Analyst-with-Python-Assignment/blob/main/smb.pcap)**
 
 ## 2. Goal
 
@@ -76,8 +76,8 @@
 
 ## Example
 
-```Please enter the path to the .pcap file: C:\Users\ResetStoreX\Downloads\hyper hire technical test\smb.pcap```
-```All JSON files have been successfully created.```
+<pre>Please enter the path to the .pcap file: C:\Users\ResetStoreX\Downloads\hyper hire technical test\smb.pcap</pre>
+<pre>All JSON files have been successfully created.</pre>
 
 ## Notes
 
