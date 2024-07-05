@@ -1,6 +1,8 @@
 from scapy.all import rdpcap
 import json
+import re
 import os
+import math
 
 def get_pcap_file_path():
     while True:
@@ -49,6 +51,16 @@ def extract_ip_port(packet):
     
     return ip_src, port_src, ip_dst, port_dst
 
+# Function to reconstruct files from SMB Write Requests
+def reconstruct_file(packets, filename):
+    file_data = bytearray()
+    for packet in packets:
+        if 'SMB2_Write_Request' in packet:
+            data = packet['SMB2_Write_Request'].Buffer
+            file_data.extend(data)
+    with open(filename, 'wb') as f:
+        f.write(file_data)
+
 # Iterate through packets and collect detailed information
 all_details = []
 file_write_details = []
@@ -57,6 +69,9 @@ file_read_details = []
 # Containers to store IP and port details specific to each type of file
 write_ip_port_details = []
 read_ip_port_details = []
+
+# Collect SMB write packets for file reconstruction
+smb_write_packets = []
 
 for i, packet in enumerate(packets):
     details = extract_packet_details(packet)
@@ -87,6 +102,10 @@ for i, packet in enumerate(packets):
                 "destination_port_number": port_dst
             })
 
+    # Collect SMB write packets
+    if 'SMB2_Write_Request' in details:
+        smb_write_packets.append(packet)
+
 # Convert to JSON with readable formatting
 file_write_json = json.dumps(file_write_details, indent=4, default=str)
 file_read_json = json.dumps(file_read_details, indent=4, default=str)
@@ -110,23 +129,95 @@ with open(file_write_path, 'w') as json_file_write:
 with open(file_read_path, 'w') as json_file_read:
     json_file_read.write(file_read_json)
 
-# Collect metadata
+# Convert file size to KB, MB, etc.
+def convert_size(size_bytes):
+    if size_bytes == 0:
+        return "0B"
+    size_name = ("B", "KB", "MB", "GB", "TB")
+    i = int(math.floor(math.log(size_bytes, 1024)))
+    p = math.pow(1024, i)
+    s = round(size_bytes / p, 2)
+    return f"{s} {size_name[i]}"
+
+# Function to extract and decode file data from logs and find the file name
+def extract_file_data_and_name(logs):
+    file_data = b''
+    file_name = ''
+    for entry in logs:
+        if len(entry) > 4 and entry[4][0] == "SMB2_Header":
+            smb_header = entry[4][1]
+            if smb_header.get("Command") == 8 and smb_header.get("Flags") == "SMB2_FLAGS_SERVER_TO_REDIR+SMB2_FLAGS_SIGNED":
+                smb_read_response = entry[5][1]
+                if "Data" in smb_read_response["Buffer"][0]:
+                    data = smb_read_response["Buffer"][0][1]
+                    if isinstance(data, str):
+                        # Remove the leading "b'" and trailing "'" from the string
+                        data = re.sub(r"^b'|'$", '', data)
+                        data = data.encode('latin1').decode('unicode_escape').encode('latin1')
+                    file_data += data
+            elif smb_header.get("Command") == 5:  # Create Response
+                smb_create_response = entry[5][1]
+                if "Buffer" in smb_create_response and smb_create_response["Buffer"]:
+                    buffer_entry = smb_create_response["Buffer"][0]
+                    if "Name" in buffer_entry:
+                        name = buffer_entry[1]
+                        if isinstance(name, str):
+                            name = re.sub(r"^b'|'$", '', name)
+                            name = name.encode('latin1').decode('unicode_escape')
+                        file_name = name
+    return file_data, file_name
+
+# Function to recursively extract packet layer details
+def extract_packet_details(packet):
+    details = []
+    while packet:
+        layer_name = packet.__class__.__name__
+        fields = {field.name: packet.getfieldval(field.name) for field in packet.fields_desc}
+        details.append((layer_name, fields))
+        packet = packet.payload
+    return details
+
+# Iterate through packets and print detailed information
+details_list = []
+for i, packet in enumerate(packets):
+    details = extract_packet_details(packet)
+    details_list.append(details)
+logs = json.dumps(details_list, default=str)
+
+# Paths to save the logs as a json file
+with open('logs.json', 'w') as json_file_read:
+    json_file_read.write(logs)
+
+# Load the logs
+with open('logs.json', 'r') as file:
+    logs = json.load(file)
+
+# Extract the file data and name
+file_data, file_name = extract_file_data_and_name(logs)
+
+# Cleaning the file name
+clean_file_name = re.sub(r'\x00', '', file_name)  # remove null bytes
+
+# Ensure the directory exists
+os.makedirs(os.path.dirname(clean_file_name), exist_ok=True)
+
+# Write the extracted data to an Excel file
+with open(clean_file_name, 'wb') as f:
+    f.write(file_data)
+
+# Get file size in bytes
+file_size = os.path.getsize(clean_file_name)
+
+# Prepare metadata
 metadata = {
-    "file_write.json": {
-        "file_size": os.path.getsize(file_write_path),
-        "ip_port_details": write_ip_port_details
-    },
-    "file_read.json": {
-        "file_size": os.path.getsize(file_read_path),
-        "ip_port_details": read_ip_port_details
-    }
+    "FileName": clean_file_name,
+    "FileSize": convert_size(file_size)
 }
 
-# Path to save the metadata JSON file
-metadata_path = os.path.join(current_directory, 'metadata_of_extracted_file.json')
-
 # Save metadata to JSON file
-with open(metadata_path, 'w') as metadata_file:
-    json.dump(metadata, metadata_file, indent=4)
+metadata_file = "metadata_of_extracted_file.json"
+with open(metadata_file, 'w') as mf:
+    json.dump(metadata, mf, indent=4)
 
-print("All JSON files have been successfully created.")
+print(f"{clean_file_name} has been reconstructed successfully.")
+print(f"Metadata has been saved to {metadata_file}.")

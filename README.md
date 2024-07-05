@@ -8,7 +8,7 @@
 **Make a Program**
 
 - **Reading the pcap file where SMBv2 packets occurred (above target file)**
-- **Extracting attachments and metadata.**
+- **Extracting attachments and its metadata.**
 
 ## 3. What to Extract
 
@@ -24,14 +24,12 @@
 
 ## 5. Program Output
 
-1. Extracted original files (attachments)
-2. Metadata of extracted file
+1. An Excel File (attachment)
+2. A JSON file containing Metadata of extracted file as a JSON file including:
     - File name
     - File size
-    - Source IP address
-    - Source port number
-    - Destination IP address
-    - Destination port number
+3. A JSON file containing logs of all packet layer details.
+
 
 ## Assignment Output
 
@@ -66,11 +64,15 @@
 5. **Output**:
     - The program will create a folder named `extracted_original_files` in the same directory as the script.
     - Inside this folder, you will find two JSON files: `file_write.json` and `file_read.json` containing the extracted data.
-    - A metadata file named `metadata_of_extracted_file.json` will be created in the same directory as the script.
+    - Then, a JSON file named `logs.json` will be created to store all packet layer details
+    - Then, the program will create another folder named `Test` in the same directory as the script.
+    - Inside this folder, you will find the original Excel file: `2009-12 Payroll.xlsx`.
+    - Thenm, a JSON file named `metadata_of_extracted_file.json` will be created in the same directory as the script.
 
 6. **Check the output**:
     - Ensure the `extracted_original_files` folder contains the expected JSON files.
-    - Verify that `metadata_of_extracted_file.json` contains the correct metadata.
+    - Verify that `2009-12 Payroll.xlsx` contains three sheets named `EMPLOYEE INFORMATION`, `PAYROLL CALCULATOR`, and `INDIVIDUAL PAYSTUBS`. Each sheet must have cells filled with data accordingly.
+    - Verify that `metadata_of_extracted_file.json` contains the correct metadata of the Excel File.
 
 ## Example
 
@@ -82,3 +84,4 @@
 - The program ensures that only valid ```.pcap``` files are processed.
 - The output files are stored in the directory where the script is located for easy access.
 - The script handles both ```SMB2 Write and Read requests and responses```, extracting relevant details into structured JSON files.
+- The script handles the extraction and recreation of an Excel file for this specific case. It may not perform well for other cases, so consider modifying it based on your needs!
