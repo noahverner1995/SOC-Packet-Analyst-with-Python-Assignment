@@ -33,7 +33,6 @@
     - Destination IP address
     - Destination Port number
     - timestamp
-3. A JSON file containing logs of all packet layer details.
 
 
 ## Assignment Output
@@ -68,25 +67,22 @@
 
 5. **Output**:
     - The program will create a folder named `extracted_original_files` in the same directory as the script.
-    - Inside this folder, you will find two JSON files: `file_write.json` and `file_read.json` containing the extracted data.
-    - Then, a JSON file named `logs.json` will be created to store all packet layer details
-    - Then, the program will create another folder named `Test` in the same directory as the script.
-    - Inside this folder, you will find the original Excel file: `2009-12 Payroll.xlsx`.
-    - Thenm, a JSON file named `metadata_of_extracted_file.json` will be created in the same directory as the script.
+    - Inside this folder, you will find 1 file: `2009-12 Payroll.xlsx` which is the original Excel file.
+    - Then, a JSON file named `metadata_of_extracted_file.json` will be created in the same directory as the script.
 
 6. **Check the output**:
-    - Ensure the `extracted_original_files` folder contains the expected JSON files.
+    - Ensure the `extracted_original_files` folder contains the expected Excel file.
     - Verify that `2009-12 Payroll.xlsx` contains three sheets named `EMPLOYEE INFORMATION`, `PAYROLL CALCULATOR`, and `INDIVIDUAL PAYSTUBS`. Each sheet must have cells filled with data accordingly.
     - Verify that `metadata_of_extracted_file.json` contains the correct metadata of the Excel File.
 
 ## Example
 
 <pre>Please enter the path to the .pcap file: C:\Users\ResetStoreX\Downloads\hyper hire technical test\smb.pcap</pre>
-<pre>All JSON files have been successfully created.</pre>
+<pre>2009-12 Payroll.xlsx has been reconstructed successfully.</pre>
+<pre>Metadata has been saved to metadata_of_extracted_file.json.</pre>
 
 ## Notes
 
 - The program ensures that only valid ```.pcap``` files are processed.
 - The output files are stored in the directory where the script is located for easy access.
-- The script handles both ```SMB2 Write and Read requests and responses```, extracting relevant details into structured JSON files.
 - The script handles the extraction and recreation of an Excel file for this specific case. It may not perform well for other cases, so consider modifying it based on your needs!
